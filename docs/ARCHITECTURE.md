@@ -10,6 +10,9 @@ LogisticApp.Functions/
 │   └── FunctionsDbContext.cs       # DbContext EF Core — solo le entità necessarie
 ├── Models/
 │   └── Delivery.cs                 # Modelli di dominio (speculari al backend API)
+├── Services/
+│   ├── IVeconLoginService.cs       # Interfaccia login browser automation
+│   └── VeconLoginService.cs        # Implementazione Playwright
 ├── host.json                       # Configurazione runtime Azure Functions
 ├── local.settings.json             # Variabili locali (NON committato)
 └── Program.cs                      # Host builder — DI, configurazione
@@ -41,6 +44,38 @@ Il progetto usa il modello **isolated worker** (non in-process): la function gir
 ## Sincronizzazione dei modelli
 
 Se il backend aggiorna `Delivery`, `Client` o `DeliveryStatus`, aggiornare i corrispondenti file in `Models/` e `Data/FunctionsDbContext.cs`.
+
+## Servizi
+
+### VeconLoginService
+
+`Services/VeconLoginService.cs` — automazione browser tramite **Playwright** per il portale `webapp.vecon.it`.
+
+```
+IVeconLoginService.LoginAsync()
+      │
+      ▼
+Playwright → Chromium headless
+      │
+      ├── Naviga a https://webapp.vecon.it/login
+      ├── Compila username (config: Vecon:Username)
+      ├── Compila password (config: Vecon:Password)
+      └── Clicca il bottone di submit
+```
+
+Registrato come **scoped** in `Program.cs`. Le credenziali sono lette da `IConfiguration` — in locale da `local.settings.json`, in produzione dagli App Settings Azure (`Vecon__Username` / `Vecon__Password`).
+
+### Flusso ProcessDeliveriesFunction — stato Created
+
+```
+Delivery.Status == Created
+      │
+      ▼
+VeconLoginService.LoginAsync()
+      │
+      ├── successo → log "Login completato"
+      └── errore   → log errore, delivery non aggiornata (retry al prossimo tick)
+```
 
 ## Aggiungere una nuova Function
 

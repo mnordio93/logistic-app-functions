@@ -10,6 +10,7 @@ Fa parte del monorepo `logistic-app/` insieme al backend API (`../backend/`) e a
 - **EF Core 10** con provider **SQL Server** — legge/scrive sul DB condiviso con il backend API
 - **Microsoft.Azure.Functions.Worker** 2.51.0
 - **Microsoft.Azure.Functions.Worker.Sdk** 2.0.7
+- **Microsoft.Playwright** 1.50.0 — automazione browser Chromium headless
 
 ## Struttura cartelle
 
@@ -20,6 +21,9 @@ LogisticApp.Functions/
 │   └── FunctionsDbContext.cs   # DbContext minimale per le function
 ├── Models/
 │   └── Delivery.cs     # Modelli di dominio (speculari al backend)
+├── Services/
+│   ├── IVeconLoginService.cs   # Interfaccia login browser automation
+│   └── VeconLoginService.cs    # Implementazione Playwright (Chromium headless)
 ├── host.json           # Configurazione runtime Azure Functions
 ├── local.settings.json # Configurazione locale (NON committare — in .gitignore)
 └── Program.cs          # Host builder, DI setup
@@ -40,6 +44,8 @@ func start
 ## Configurazione
 
 Il valore `SqlConnectionString` in `local.settings.json` (sviluppo) o nell'App Setting di Azure (produzione) deve puntare allo stesso database SQL usato dal backend API.
+
+Le credenziali del portale Vecon si configurano con `Vecon__Username` e `Vecon__Password` (doppiounderscore = separatore di sezione in .NET).
 
 ## Modelli
 
