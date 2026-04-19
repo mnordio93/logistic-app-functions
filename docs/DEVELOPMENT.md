@@ -6,7 +6,7 @@
 - **Azure Functions Core Tools v4** — `npm install -g azure-functions-core-tools@4 --unsafe-perm true`
 - **Azurite** (opzionale, per `AzureWebJobsStorage` locale) — `npm install -g azurite`
 - Un'istanza **SQL Server** accessibile in locale (o Azure SQL via VPN/tunnel)
-- **Google Chrome** installato sul sistema — richiesto da Selenium WebDriver a runtime
+- **Google Chrome** installato sul sistema — richiesto da Selenium WebDriver a runtime. Il ChromeDriver compatibile viene scaricato automaticamente da **Selenium Manager** (incluso in `Selenium.WebDriver` 4.6+), nessuna installazione manuale necessaria.
 
 ## Setup locale
 
@@ -100,13 +100,16 @@ az ad sp create-for-rbac \
 
 Copiare l'output JSON come valore del secret `AZURE_CREDENTIALS`.
 
-### Impostare la connection string sull'app Azure
+### Impostare gli App Settings sull'app Azure
 
 ```bash
 az functionapp config appsettings set \
   --name <FUNCTIONAPP_NAME> \
   --resource-group <RG_NAME> \
-  --settings "SqlConnectionString=<CONNECTION_STRING>"
+  --settings \
+    "SqlConnectionString=<CONNECTION_STRING>" \
+    "Vecon__Username=<VECON_USERNAME>" \
+    "Vecon__Password=<VECON_PASSWORD>"
 ```
 
 ## Passare a un DB reale (produzione)
