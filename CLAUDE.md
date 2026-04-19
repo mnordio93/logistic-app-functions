@@ -65,3 +65,8 @@ public enum DeliveryStatus
 2. Iniettare `FunctionsDbContext` e `ILogger<T>` via primary constructor
 3. Decorare il metodo con `[Function(nameof(...))]` e il trigger appropriato
 4. Registrare eventuali servizi aggiuntivi in `Program.cs`
+
+## Docs
+
+- `docs/ARCHITECTURE.md` — struttura, flusso, pattern, come aggiungere function
+- `docs/DEVELOPMENT.md` — setup locale, build, deploy, secrets GitHub richiesti
