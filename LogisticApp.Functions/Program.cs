@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LogisticApp.Functions.Data;
+using LogisticApp.Functions.Services;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
@@ -12,6 +13,8 @@ var host = new HostBuilder()
 
         services.AddDbContext<FunctionsDbContext>(opt =>
             opt.UseSqlServer(connectionString));
+
+        services.AddScoped<IVeconLoginService, VeconLoginService>();
     })
     .Build();
 

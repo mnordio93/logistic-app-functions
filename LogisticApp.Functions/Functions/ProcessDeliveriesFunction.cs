@@ -3,10 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using LogisticApp.Functions.Data;
 using LogisticApp.Functions.Models;
+using LogisticApp.Functions.Services;
 
 namespace LogisticApp.Functions.Functions;
 
-public class ProcessDeliveriesFunction(FunctionsDbContext db, ILogger<ProcessDeliveriesFunction> logger)
+public class ProcessDeliveriesFunction(
+    FunctionsDbContext db,
+    ILogger<ProcessDeliveriesFunction> logger,
+    IVeconLoginService veconLogin)
 {
     /// <summary>
     /// Legge tutte le delivery con status diverso da InsertedOk e le elabora.
@@ -53,7 +57,9 @@ public class ProcessDeliveriesFunction(FunctionsDbContext db, ILogger<ProcessDel
             switch (delivery.Status)
             {
                 case DeliveryStatus.Created:
-                    // TODO: avviare il processo di inserimento
+                    logger.LogInformation("Delivery {Id}: avvio login Vecon", delivery.Id);
+                    var success = await veconLogin.LoginAsync();
+                    logger.LogInformation("Delivery {Id}: login Vecon — esito: {Success}", delivery.Id, success);
                     break;
 
                 case DeliveryStatus.NotInserted:
