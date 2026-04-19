@@ -10,7 +10,7 @@ Fa parte del monorepo `logistic-app/` insieme al backend API (`../backend/`) e a
 - **EF Core 10** con provider **SQL Server** — legge/scrive sul DB condiviso con il backend API
 - **Microsoft.Azure.Functions.Worker** 2.51.0
 - **Microsoft.Azure.Functions.Worker.Sdk** 2.0.7
-- **Microsoft.Playwright** 1.50.0 — automazione browser Chromium headless
+- **Selenium.WebDriver** 4.27.0 — automazione browser Chrome headless
 
 ## Struttura cartelle
 
@@ -23,7 +23,7 @@ LogisticApp.Functions/
 │   └── Delivery.cs     # Modelli di dominio (speculari al backend)
 ├── Services/
 │   ├── IVeconLoginService.cs   # Interfaccia login browser automation
-│   └── VeconLoginService.cs    # Implementazione Playwright (Chromium headless)
+│   └── VeconLoginService.cs    # Implementazione Selenium WebDriver (Chrome headless)
 ├── host.json           # Configurazione runtime Azure Functions
 ├── local.settings.json # Configurazione locale (NON committare — in .gitignore)
 └── Program.cs          # Host builder, DI setup

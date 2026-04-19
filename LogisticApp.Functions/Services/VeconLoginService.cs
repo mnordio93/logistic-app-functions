@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Playwright;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace LogisticApp.Functions.Services;
 
@@ -17,26 +18,29 @@ public class VeconLoginService(IConfiguration config, ILogger<VeconLoginService>
 
         logger.LogInformation("Avvio login su {Url}", LoginUrl);
 
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-        {
-            Headless = true,
-        });
+        var options = new ChromeOptions();
+        options.AddArgument("--headless");
+        options.AddArgument("--no-sandbox");
+        options.AddArgument("--disable-dev-shm-usage");
 
-        var page = await browser.NewPageAsync();
+        using var driver = new ChromeDriver(options);
 
         try
         {
-            await page.GotoAsync(LoginUrl, new PageGotoOptions { Timeout = 30_000 });
+            driver.Navigate().GoToUrl(LoginUrl);
 
-            await page.FillAsync("input[name='username'], input[type='email'], #username", username);
-            await page.FillAsync("input[name='password'], input[type='password'], #password", password);
-            await page.ClickAsync("button[type='submit'], input[type='submit'], button:has-text('Login'), button:has-text('Accedi')");
+            driver.FindElement(By.CssSelector("input[name='username'], input[type='email'], #username"))
+                  .SendKeys(username);
 
-            // Attendi navigazione dopo il login
-            await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 15_000 });
+            driver.FindElement(By.CssSelector("input[name='password'], input[type='password'], #password"))
+                  .SendKeys(password);
 
-            logger.LogInformation("Login completato — URL corrente: {Url}", page.Url);
+            driver.FindElement(By.CssSelector("button[type='submit'], input[type='submit']"))
+                  .Click();
+
+            await Task.Delay(2000, ct);
+
+            logger.LogInformation("Login completato — URL corrente: {Url}", driver.Url);
             return true;
         }
         catch (Exception ex)
@@ -46,7 +50,7 @@ public class VeconLoginService(IConfiguration config, ILogger<VeconLoginService>
         }
         finally
         {
-            await browser.CloseAsync();
+            driver.Quit();
         }
     }
 }

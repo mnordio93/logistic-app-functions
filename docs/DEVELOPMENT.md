@@ -6,7 +6,7 @@
 - **Azure Functions Core Tools v4** — `npm install -g azure-functions-core-tools@4 --unsafe-perm true`
 - **Azurite** (opzionale, per `AzureWebJobsStorage` locale) — `npm install -g azurite`
 - Un'istanza **SQL Server** accessibile in locale (o Azure SQL via VPN/tunnel)
-- **Playwright browser binaries** — installate una volta dopo il primo build (vedi sotto)
+- **Google Chrome** installato sul sistema — richiesto da Selenium WebDriver a runtime
 
 ## Setup locale
 
@@ -34,19 +34,6 @@ Copiare il template e impostare la connection string e le credenziali Vecon:
 ```bash
 azurite --silent --location /tmp/azurite --debug /tmp/azurite/debug.log
 ```
-
-### 2b. Installare i browser Playwright (prima volta)
-
-Dopo aver fatto il primo `dotnet build`, installare i binari di Chromium:
-
-```bash
-export PATH="$HOME/.dotnet:$PATH"
-cd functions/LogisticApp.Functions
-dotnet build
-pwsh bin/Debug/net10.0/playwright.ps1 install chromium
-```
-
-Se `pwsh` non è disponibile, usare `dotnet tool install -g Microsoft.Playwright.CLI` e poi `playwright install chromium`.
 
 ### 3. Avviare le function
 

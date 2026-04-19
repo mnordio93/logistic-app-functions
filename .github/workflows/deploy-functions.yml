@@ -36,9 +36,6 @@ jobs:
       - name: Publish
         run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PUBLISH_PATH }} --no-build
 
-      - name: Install Playwright browsers
-        run: pwsh ${{ env.PUBLISH_PATH }}/playwright.ps1 install chromium
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:

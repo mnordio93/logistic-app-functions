@@ -12,7 +12,7 @@ LogisticApp.Functions/
 │   └── Delivery.cs                 # Modelli di dominio (speculari al backend API)
 ├── Services/
 │   ├── IVeconLoginService.cs       # Interfaccia login browser automation
-│   └── VeconLoginService.cs        # Implementazione Playwright
+│   └── VeconLoginService.cs        # Implementazione Selenium WebDriver
 ├── host.json                       # Configurazione runtime Azure Functions
 ├── local.settings.json             # Variabili locali (NON committato)
 └── Program.cs                      # Host builder — DI, configurazione
@@ -49,13 +49,13 @@ Se il backend aggiorna `Delivery`, `Client` o `DeliveryStatus`, aggiornare i cor
 
 ### VeconLoginService
 
-`Services/VeconLoginService.cs` — automazione browser tramite **Playwright** per il portale `webapp.vecon.it`.
+`Services/VeconLoginService.cs` — automazione browser tramite **Selenium WebDriver** per il portale `webapp.vecon.it`.
 
 ```
 IVeconLoginService.LoginAsync()
       │
       ▼
-Playwright → Chromium headless
+Selenium ChromeDriver (headless)
       │
       ├── Naviga a https://webapp.vecon.it/login
       ├── Compila username (config: Vecon:Username)
